@@ -126,11 +126,29 @@ expr* semantics::on_equality_expression(type* t, binop bo, expr* e1, expr* e2)
   return e; 
 }
 
+expr* semantics::on_id_as_primary(symbol sym)
+{
+  decl* d; 
+  try 
+  {
+  d = name_map.at(sym);
+  }
+  catch(...)
+  {
+    throw std::runtime_error("undeclared identifier.");
+  }
+  expr* e = static_cast<value_decl*>(d)->init; 
+  return e; 
+}
+
 // decls
 
 decl* semantics::on_value_decl(symbol sym, type* t, expr* e = nullptr)
-{
-  return new value_decl(sym, t, e); 
+{ 
+  decl* d =  new value_decl(sym, t, e); 
+  std::pair<symbol, decl*> p(sym, d); 
+  name_map.insert(p); 
+  return d; 
 }
 
 decl* semantics::on_parm_decl(symbol sym, type* t)
@@ -168,4 +186,17 @@ stmt* semantics::on_if_statement(expr* c, stmt* s1, stmt* s2)
 {
   stmt* s = new if_stmt(c, s1, s2);
   return s; 
+}
+
+stmt* semantics::on_assignment_statement(symbol s, expr* e)
+{
+  try
+  {
+    name_map.at(s);
+  }
+  catch (...)
+  {
+    throw std::runtime_error("undeclared identifier.");
+  }
+  return new assign_stmt(s,e);
 }

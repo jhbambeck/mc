@@ -57,7 +57,8 @@ private:
   //token parse_if_statement_seq(); 
   stmt* parse_if_block_statement(); 
   stmt* parse_if_expression_statement();
-  stmt* parse_if_declaration_statement(); 
+  stmt* parse_if_declaration_statement();
+  stmt* parse_if_assignment_statement();  
 
   decl* parse_function_definition();  
   //void parse_constant_definition(); 
@@ -69,4 +70,3 @@ private:
   //void parse_declaration_seq();//expects end of file
   expr* parse_program();  
 };
-

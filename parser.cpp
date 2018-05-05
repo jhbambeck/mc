@@ -74,7 +74,8 @@ void parser::parse_constant_expression()
 */
 expr* parser::parse_primary_expression()
 {
-  expr* e; 
+  expr* e;
+  symbol s;  
   switch(current_tok.name)
   {
   case tok_binary_integer_literal:
@@ -98,11 +99,14 @@ expr* parser::parse_primary_expression()
     e = act.on_boolean_literal(current_tok);
     accept(); 
     break; 
-  /*
+  
   case tok_identifier: 
+    s = current_tok.attribute.sym; 
+    e = act.on_id_as_primary(s); 
     accept(); 
     break;
- 
+
+ /*
   case tok_left_paren:
     match(tok_left_paren);
     parse_expression(); 
@@ -390,7 +394,8 @@ stmt* parser::parse_if_statement()
   stmt* s = nullptr; 
   s = parse_if_declaration_statement();
   if(!s) s = parse_if_while_statement();  
-  if(!s) s = parse_if_if_statement(); 
+  if(!s) s = parse_if_if_statement();
+  if(!s) s = parse_if_assignment_statement();  
   // last
   if(!s) s = parse_if_expression_statement();   
   return s; 
@@ -507,6 +512,20 @@ stmt* parser::parse_if_declaration_statement()
   if(d)
   { 
     return act.on_declaration_statement(d);
+  }
+  return nullptr; 
+}
+
+stmt* parser::parse_if_assignment_statement()
+{
+  if(current_tok.name == tok_identifier)
+  {
+    symbol s = current_tok.attribute.sym;
+    accept();  
+    match(tok_assignment_operator);
+    expr * e = parse_expression();
+    match(tok_semicolon); 
+    return act.on_assignment_statement(s, e);
   }
   return nullptr; 
 }

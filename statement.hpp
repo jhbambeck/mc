@@ -16,6 +16,7 @@ struct stmt
     ret_kind,
     decl_kind, 
     expr_kind,
+    assign_kind,
     is_false_kind, 
   };
  
@@ -103,4 +104,13 @@ struct expr_stmt : stmt
 
   expr* e; 
 };
+
+struct  assign_stmt : stmt
+{
+  assign_stmt(symbol s, expr* e) : stmt(assign_kind), val(e), name(s)
+   { }
+   
+  symbol name; 
+  expr* val; 
+}; 
 
