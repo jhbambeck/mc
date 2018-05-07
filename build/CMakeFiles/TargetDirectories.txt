@@ -1,0 +1,4 @@
+/home/jake/Code/mc3/build/CMakeFiles/rebuild_cache.dir
+/home/jake/Code/mc3/build/CMakeFiles/lang.dir
+/home/jake/Code/mc3/build/CMakeFiles/edit_cache.dir
+/home/jake/Code/mc3/build/CMakeFiles/mc.dir

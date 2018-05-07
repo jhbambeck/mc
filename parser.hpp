@@ -7,7 +7,7 @@ struct parser
   parser(symbol_table &syms, const std::string& file_string)
     : lex(syms, file_string) { accept(); } 
 
-  stmt* parse(); 
+  stmt_list parse(); 
 
 private: 
   token current_tok; 

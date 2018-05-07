@@ -1,11 +1,16 @@
 #include "parser.hpp"
 
-stmt* parser::parse()
+stmt_list parser::parse()
 {
-  stmt* s; 
-  while(current_tok.name != tok_end_of_file) s = parse_if_statement(); 
-  return s;  
-  //parse_program(); 
+  stmt* s;
+  stmt_list stmts;  
+  while(current_tok.name != tok_end_of_file) 
+  {
+    s = parse_if_statement(); 
+    stmts.emplace_back(s);
+  }
+  
+  return stmts;  
 }
 
 token parser::accept()

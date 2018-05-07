@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblang.a  CMakeFiles/lang.dir/token.cpp.o CMakeFiles/lang.dir/lexer.cpp.o CMakeFiles/lang.dir/parser.cpp.o CMakeFiles/lang.dir/semantics.cpp.o CMakeFiles/lang.dir/codegen.cpp.o
+/usr/bin/ranlib liblang.a
