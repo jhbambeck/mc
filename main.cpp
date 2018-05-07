@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include "parser.hpp"
+#include "codegen.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -17,5 +18,6 @@ int main(int argc, char* argv[])
   }
 
   parser p(syms, file);
-  p.parse(); 
+  stmt_list s = p.parse(); 
+  generate(s);
 }

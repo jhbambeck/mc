@@ -6,4 +6,4 @@
 
 class stmt;
 
-void generate(const stmt_list&);
+void generate(stmt_list&);

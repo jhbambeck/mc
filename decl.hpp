@@ -27,6 +27,8 @@ struct decl
   decl(kind ki) : k(ki)
     { }
 
+  std::string get_name() { return *name; }
+
   operator bool() const {return k != is_false_kind;}
 
   kind k; 

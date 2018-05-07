@@ -1,3 +1,4 @@
+#pragma once
 #include "expr.hpp"
 #include "decl.hpp"
 #include "expr.hpp"
