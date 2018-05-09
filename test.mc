@@ -1,1 +1,3 @@
-var x: int = 1 + 3 - 5 / 5;
+var y: int = 7; 
+var x: int = y + 1;
+var tru: bool = true; 

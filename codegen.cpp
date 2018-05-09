@@ -29,12 +29,15 @@ struct cg
 
   llvm::Type* get_type(type* t);
   llvm::Type* get_int_type(int_type* t);
+  llvm::Type* get_bool_type(bool_type* t); 
 
   llvm::Value* generate_expr(expr* e);
   llvm::Value* generate_int_expr(int_expr* e);
+  llvm::Value* generate_bool_expr(bool_expr* e);
   llvm::Value* generate_binop_expr(binop_expr* e);
 
-  void generate_declaration_statement(decl_stmt* s); 
+  void generate_declaration_statement(decl_stmt* s);
+  void generate_if_statement(if_stmt* s); 
 
   void generate(); 
 
@@ -55,6 +58,8 @@ llvm::Type* cg::get_type(type* t)
   {
   case type::int_kind:
     return get_int_type(static_cast<int_type*>(t));
+  case type::bool_kind: 
+    return get_bool_type(static_cast<bool_type*>(t));
   default: 
      throw std::logic_error("invalid type.");
   }
@@ -65,12 +70,19 @@ llvm::Type* cg::get_int_type(int_type* t)
   return llvm::Type::getInt32Ty(*ll);
 }
 
+llvm::Type* cg::get_bool_type(bool_type* t)
+{
+  return llvm::Type::getInt1Ty(*ll); 
+}
+
 llvm::Value* cg::generate_expr(expr* e)
 {
   switch(e->k)
   {
   case expr::int_kind: 
     return generate_int_expr(static_cast<int_expr*>(e));
+  case expr::bool_kind: 
+    return generate_bool_expr(static_cast<bool_expr*>(e));
   case expr::binop_kind:
     return generate_binop_expr(static_cast<binop_expr*>(e));
   default: 
@@ -81,6 +93,14 @@ llvm::Value* cg::generate_expr(expr* e)
 llvm::Value* cg::generate_int_expr(int_expr* e)
 {
   return llvm::ConstantInt::get(get_type(e->t), e->val, true);
+}
+
+llvm::Value* cg::generate_bool_expr(bool_expr* e)
+{
+  int i; 
+  if(e->val) i = 1; 
+  else i = 0; 
+  return llvm::ConstantInt::get(get_type(e->t), i, true);
 }
 
 llvm::Value* cg::generate_binop_expr(binop_expr* e)
@@ -117,6 +137,18 @@ void cg::generate_declaration_statement(decl_stmt* s)
   declare(s->d, v);
 }
 
+/*
+void cg::generate_if_statement(if_stmt* s)
+{
+  llvm::Value* vc = generate_expr(s->cond);
+  llvm::Value* vt = generate_expr(s->true_e);
+  llvm::Value* vf = generate_expr(s->false_e);
+  llvm::Constant* cc = static_cast<llvm::Constant*>(vc);
+  llvm::Constant* ct = static_cast<llvm::Constant*>(vt);
+  llvm::Constant* cf = static_cast<llvm::Constant*>(vf);
+}
+*/
+
 void cg::generate()
 {
   for(std::vector<stmt*>::iterator it = stmts->begin(); it != stmts->end(); ++it)
@@ -126,7 +158,10 @@ void cg::generate()
     case stmt::decl_kind: 
       generate_declaration_statement(static_cast<decl_stmt*>(*it));
       break;
-    default: 
+    case stmt::if_kind:
+      generate_if_statement(static_cast<if_stmt*>(*it));
+      break;
+    default:  
       throw std::runtime_error("Bad statement kind");
     }
   }
