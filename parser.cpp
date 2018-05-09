@@ -17,7 +17,7 @@ token parser::accept()
 {
   token temp = current_tok;  
   current_tok = lex.lex();
-  print_token(current_tok); std::cout << '\n'; 
+  //print_token(current_tok); std::cout << '\n'; 
   return temp; 
 }
 

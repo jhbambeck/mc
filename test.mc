@@ -1,1 +1,1 @@
-var x: int = 1;
+var x: int = 1 + 3 - 5 / 5;

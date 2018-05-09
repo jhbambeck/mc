@@ -32,6 +32,7 @@ struct cg
 
   llvm::Value* generate_expr(expr* e);
   llvm::Value* generate_int_expr(int_expr* e);
+  llvm::Value* generate_binop_expr(binop_expr* e);
 
   void generate_declaration_statement(decl_stmt* s); 
 
@@ -70,6 +71,8 @@ llvm::Value* cg::generate_expr(expr* e)
   {
   case expr::int_kind: 
     return generate_int_expr(static_cast<int_expr*>(e));
+  case expr::binop_kind:
+    return generate_binop_expr(static_cast<binop_expr*>(e));
   default: 
     throw std::runtime_error("invalid expression");
   }
@@ -80,6 +83,27 @@ llvm::Value* cg::generate_int_expr(int_expr* e)
   return llvm::ConstantInt::get(get_type(e->t), e->val, true);
 }
 
+llvm::Value* cg::generate_binop_expr(binop_expr* e)
+{
+  
+  llvm::Value* v1 = generate_expr(e->lhs);
+  llvm::Value* v2 = generate_expr(e->rhs);
+  llvm::Constant* c1 = static_cast<llvm::Constant*>(v1);
+  llvm::Constant* c2 = static_cast<llvm::Constant*>(v2);
+  switch(e->op)
+  {
+    case binop_add: 
+      return llvm::ConstantExpr::getAdd(c1, c2);
+    case binop_sub: 
+      return llvm::ConstantExpr::getSub(c1, c2);
+    case binop_mul: 
+      return llvm::ConstantExpr::getMul(c1, c2);
+    case binop_div: 
+      return llvm::ConstantExpr::getUDiv(c1, c2);
+    default:
+      throw std::logic_error("Invalid binop operation.");
+  }
+}
 
 void cg::generate_declaration_statement(decl_stmt* s)
 {
